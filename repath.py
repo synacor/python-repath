@@ -161,7 +161,7 @@ def flags(options):
 
 
 def regexp_to_regexp(path, keys):
-    match = path['source'].search(r'\((?!\?)')
+    match = re.search(r'\((?!\?)', path.pattern)
 
     if match:
         keys.extend([
