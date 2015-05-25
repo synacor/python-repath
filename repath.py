@@ -207,26 +207,27 @@ def tokens_to_pattern(tokens, options=None):
     lastToken = tokens[-1]
     endsWithSlash = isinstance(lastToken, basestring) and lastToken.endswith('/')
 
+    PATTERNS = dict(
+        REPEAT='(?:{prefix}{capture})*',
+        OPTIONAL='(?:{prefix}({capture}))?',
+        REQUIRED='{prefix}({capture})'
+    )
+
     for token in tokens:
         if isinstance(token, basestring):
             route += escape_string(token)
             continue
 
-        prefix = escape_string(token['prefix'])
-        capture = token['pattern']
+        parts = {
+            'prefix': escape_string(token['prefix']),
+            'capture': token['pattern'],
+        }
 
         if token['repeat']:
-            capture += '(?:%s%s)*' % (prefix, capture)
+            parts['capture'] += PATTERNS['REPEAT'].format(**parts)
 
-        if token['optional']:
-            if prefix:
-                capture = '(?:%s(%s))?' % (prefix, capture)
-            else:
-                capture = '(%s)?' % capture
-        else:
-            capture = '%s(%s)' % (prefix, capture)
-
-        route += capture
+        template = PATTERNS['OPTIONAL' if token['optional'] else 'REQUIRED']
+        route += template.format(**parts)
 
     if not strict:
         route = route[:-1] if endsWithSlash else route
