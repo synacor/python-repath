@@ -209,8 +209,8 @@ def tokens_to_pattern(tokens, options=None):
 
     PATTERNS = dict(
         REPEAT='(?:{prefix}{capture})*',
-        OPTIONAL='(?:{prefix}({capture}))?',
-        REQUIRED='{prefix}({capture})'
+        OPTIONAL='(?:{prefix}({name}{capture}))?',
+        REQUIRED='{prefix}({name}{capture})'
     )
 
     for token in tokens:
@@ -221,7 +221,11 @@ def tokens_to_pattern(tokens, options=None):
         parts = {
             'prefix': escape_string(token['prefix']),
             'capture': token['pattern'],
+            'name': ''
         }
+
+        if token['name'] and re.search('[a-zA-Z]', token['name']):
+            parts['name'] = '?P<%s>' % re.escape(token['name'])
 
         if token['repeat']:
             parts['capture'] += PATTERNS['REPEAT'].format(**parts)

@@ -186,7 +186,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']]
+            ['/route', ['/route', 'route'], {'test': 'route'}]
         ],
         [
             [{}, None],
@@ -210,7 +210,7 @@ TEST_CASES = [
             '/'
         ],
         [
-            ['/route', ['/route', 'route']]
+            ['/route', ['/route', 'route'], {'test': 'route'}]
         ],
         [
             [{ 'test': 'abc' }, '/abc/']
@@ -291,8 +291,8 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']],
-            ['/route/', ['/route', 'route']]
+            ['/route', ['/route', 'route'], {'test': 'route'}],
+            ['/route/', ['/route', 'route'], {'test': 'route'}]
         ],
         [
             [{}, None],
@@ -318,7 +318,7 @@ TEST_CASES = [
         ],
         [
             ['/route', None],
-            ['/route/', ['/route/', 'route']]
+            ['/route/', ['/route/', 'route'], {'test': 'route'}]
         ],
         [
             [{ 'test': 'foobar' }, '/foobar/']
@@ -372,10 +372,10 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']],
-            ['/another', ['/another', 'another']],
+            ['/route', ['/route', 'route'], {'test': 'route'}],
+            ['/another', ['/another', 'another'], {'test': 'another'}],
             ['/something/else', None],
-            ['/route.json', ['/route.json', 'route.json']]
+            ['/route.json', ['/route.json', 'route.json'], {'test': 'route.json'}]
         ],
         [
             [{ 'test': 'route' }, '/route']
@@ -397,7 +397,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']],
+            ['/route', ['/route', 'route'], {'test': 'route'}],
             ['/route/', None]
         ],
         [
@@ -421,7 +421,7 @@ TEST_CASES = [
             '/'
         ],
         [
-            ['/route/', ['/route/', 'route']],
+            ['/route/', ['/route/', 'route'], {'test': 'route'}],
             ['/route//', None]
         ],
         [
@@ -444,8 +444,8 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route.json', ['/route.json', 'route.json']],
-            ['/route//', ['/route', 'route']]
+            ['/route.json', ['/route.json', 'route.json'], {'test': 'route.json'}],
+            ['/route//', ['/route', 'route'], {'test': 'route'}]
         ],
         [
             [{ 'test': 'route' }, '/route']
@@ -468,9 +468,9 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']],
+            ['/route', ['/route', 'route'], {'test': 'route'}],
             ['/route/nested', None],
-            ['/', ['/', None]],
+            ['/', ['/', None], {'test': None}],
             ['//', None]
         ],
         [
@@ -494,7 +494,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route']],
+            ['/route', ['/route', 'route'], {'test': 'route'}],
             ['/', None], # Questionable behaviour.
             ['//', None]
         ],
@@ -521,7 +521,7 @@ TEST_CASES = [
         ],
         [
             ['/route', None],
-            ['/route/', ['/route/', 'route']],
+            ['/route/', ['/route/', 'route'], {'test': 'route'}],
             ['/', ['/', None]],
             ['//', None]
         ],
@@ -547,8 +547,8 @@ TEST_CASES = [
         ],
         [
             ['/', None],
-            ['/route', ['/route', 'route']],
-            ['/some/basic/route', ['/some/basic/route', 'some/basic/route']],
+            ['/route', ['/route', 'route'], {'test': 'route'}],
+            ['/some/basic/route', ['/some/basic/route', 'some/basic/route'], {'test': 'some/basic/route'}],
             ['//', None]
         ],
         [
@@ -572,7 +572,7 @@ TEST_CASES = [
         ],
         [
             ['/abc/456/789', None],
-            ['/123/456/789', ['/123/456/789', '123/456/789']]
+            ['/123/456/789', ['/123/456/789', '123/456/789'], {'test': '123/456/789'}]
         ],
         [
             [{ 'test': 'abc' }, None],
@@ -596,8 +596,8 @@ TEST_CASES = [
         ],
         [
             ['/route', None],
-            ['/route.json', ['/route.json', 'json']],
-            ['/route.xml.json', ['/route.xml.json', 'xml.json']],
+            ['/route.json', ['/route.json', 'json'], {'ext': 'json'}],
+            ['/route.xml.json', ['/route.xml.json', 'xml.json'], {'ext': 'xml.json'}],
             ['/route.html', None]
         ],
         [
@@ -623,10 +623,10 @@ TEST_CASES = [
             }
         ],
         [
-            ['/', ['/', None]],
+            ['/', ['/', None], {'test': None}],
             ['//', None],
-            ['/route', ['/route', 'route']],
-            ['/some/basic/route', ['/some/basic/route', 'some/basic/route']]
+            ['/route', ['/route', 'route'], {'test': 'route'}],
+            ['/some/basic/route', ['/some/basic/route', 'some/basic/route'], {'test': 'some/basic/route'}]
         ],
         [
             [{}, ''],
@@ -650,8 +650,8 @@ TEST_CASES = [
         ],
         [
             ['/route', ['/route', None]],
-            ['/route.json', ['/route.json', 'json']],
-            ['/route.json.xml', ['/route.json.xml', 'json.xml']],
+            ['/route.json', ['/route.json', 'json'], {'ext': 'json'}],
+            ['/route.json.xml', ['/route.json.xml', 'json.xml'], {'ext': 'json.xml'}],
             ['/route.123', None]
         ],
         [
@@ -679,7 +679,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/123', ['/123', '123']],
+            ['/123', ['/123', '123'], {'test': '123'}],
             ['/abc', None],
             ['/123/abc', None]
         ],
@@ -704,9 +704,9 @@ TEST_CASES = [
             }
         ],
         [
-            ['/123', ['/123', '123']],
+            ['/123', ['/123', '123'], {'test': '123'}],
             ['/abc', None],
-            ['/123/abc', ['/123', '123']]
+            ['/123/abc', ['/123', '123'], {'test': '123'}]
         ],
         [
             [{ 'test': '123' }, '/123']
@@ -726,7 +726,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/anything/goes/here', ['/anything/goes/here', 'anything/goes/here']]
+            ['/anything/goes/here', ['/anything/goes/here', 'anything/goes/here'], {'test': 'anything/goes/here'}]
         ],
         [
             [{ 'test': '' }, '/'],
@@ -748,7 +748,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/abcde', ['/abcde', 'abcde']],
+            ['/abcde', ['/abcde', 'abcde'], {'route': 'abcde'}],
             ['/12345', None]
         ],
         [
@@ -771,8 +771,8 @@ TEST_CASES = [
             }
         ],
         [
-            ['/this', ['/this', 'this']],
-            ['/that', ['/that', 'that']],
+            ['/this', ['/this', 'this'], {'route': 'this'}],
+            ['/that', ['/that', 'that'], {'route': 'that'}],
             ['/foo', None]
         ],
         [
@@ -839,7 +839,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['route', ['route', 'route']],
+            ['route', ['route', 'route'], {'test': 'route'}],
             ['/route', None],
             ['route/', None]
         ],
@@ -863,10 +863,10 @@ TEST_CASES = [
             }
         ],
         [
-            ['route', ['route', 'route']],
+            ['route', ['route', 'route'], {'test': 'route'}],
             ['/route', None],
-            ['route/', ['route/', 'route']],
-            ['route/foobar', ['route', 'route']]
+            ['route/', ['route/', 'route'], {'test': 'route'}],
+            ['route/foobar', ['route', 'route'], {'test': 'route'}]
         ],
         [
             [{ 'test': 'route' }, 'route']
@@ -886,7 +886,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['route', ['route', 'route']],
+            ['route', ['route', 'route'], {'test': 'route'}],
             ['/route', None],
             ['', ['', None]],
             ['route/foobar', None]
@@ -929,9 +929,9 @@ TEST_CASES = [
             '.json'
         ],
         [
-            ['/test.json', ['/test.json', 'test']],
-            ['/route.json', ['/route.json', 'route']],
-            ['/route.json.json', ['/route.json.json', 'route.json']]
+            ['/test.json', ['/test.json', 'test'], {'test': 'test'}],
+            ['/route.json', ['/route.json', 'route'], {'test': 'route'}],
+            ['/route.json.json', ['/route.json.json', 'route.json'], {'test': 'route.json'}]
         ],
         [
             [{ 'test': 'foo' }, '/foo.json']
@@ -955,7 +955,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/test.html', ['/test.html', 'html']],
+            ['/test.html', ['/test.html', 'html'], {'format': 'html'}],
             ['/test.hbs.html', None]
         ],
         [
@@ -964,37 +964,37 @@ TEST_CASES = [
             [{ 'format': 'foo' }, '/test.foo']
         ]
     ],
-    [
-        '/test.:format.:format',
-        None,
-        [
-            '/test',
-            {
-                'name': 'format',
-                'prefix': '.',
-                'delimiter': '.',
-                'optional': False,
-                'repeat': False,
-                'pattern': '[^.]+?'
-            },
-            {
-                'name': 'format',
-                'prefix': '.',
-                'delimiter': '.',
-                'optional': False,
-                'repeat': False,
-                'pattern': '[^.]+?'
-            }
-        ],
-        [
-            ['/test.html', None],
-            ['/test.hbs.html', ['/test.hbs.html', 'hbs', 'html']]
-        ],
-        [
-            [{ 'format': 'foo.bar' }, None],
-            [{ 'format': 'foo' }, '/test.foo.foo']
-        ]
-    ],
+    # [
+    #     '/test.:format.:format',
+    #     None,
+    #     [
+    #         '/test',
+    #         {
+    #             'name': 'format',
+    #             'prefix': '.',
+    #             'delimiter': '.',
+    #             'optional': False,
+    #             'repeat': False,
+    #             'pattern': '[^.]+?'
+    #         },
+    #         {
+    #             'name': 'format',
+    #             'prefix': '.',
+    #             'delimiter': '.',
+    #             'optional': False,
+    #             'repeat': False,
+    #             'pattern': '[^.]+?'
+    #         }
+    #     ],
+    #     [
+    #         ['/test.html', None],
+    #         ['/test.hbs.html', ['/test.hbs.html', 'hbs', 'html']]
+    #     ],
+    #     [
+    #         [{ 'format': 'foo.bar' }, None],
+    #         [{ 'format': 'foo' }, '/test.foo.foo']
+    #     ]
+    # ],
     [
         '/test.:format+',
         None,
@@ -1010,8 +1010,8 @@ TEST_CASES = [
             }
         ],
         [
-            ['/test.html', ['/test.html', 'html']],
-            ['/test.hbs.html', ['/test.hbs.html', 'hbs.html']]
+            ['/test.html', ['/test.html', 'html'], {'format': 'html'}],
+            ['/test.hbs.html', ['/test.hbs.html', 'hbs.html'], {'format': 'hbs.html'}]
         ],
         [
             [{ 'format': [] }, None],
@@ -1036,7 +1036,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/test.html', ['/test.html', 'html']],
+            ['/test.html', ['/test.html', 'html'], {'format': 'html'}],
             ['/test.hbs.html', None]
         ],
         [
@@ -1059,7 +1059,7 @@ TEST_CASES = [
             '.'
         ],
         [
-            ['/test.html.', ['/test.html.', 'html']],
+            ['/test.html.', ['/test.html.', 'html'], {'format': 'html'}],
             ['/test.hbs.html', None]
         ],
         [
@@ -1092,9 +1092,9 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route.html', ['/route.html', 'route', 'html']],
+            ['/route.html', ['/route.html', 'route', 'html'], {'test': 'route', 'format': 'html'}],
             ['/route', None],
-            ['/route.html.json', ['/route.html.json', 'route.html', 'json']]
+            ['/route.html.json', ['/route.html.json', 'route.html', 'json'], {'test': 'route.html', 'format': 'json'}]
         ],
         [
             [{}, None],
@@ -1124,7 +1124,7 @@ TEST_CASES = [
         ],
         [
             ['/route', ['/route', 'route', None]],
-            ['/route.json', ['/route.json', 'route', 'json']],
+            ['/route.json', ['/route.json', 'route', 'json'], {'test': 'route', 'format': 'json'}],
             ['/route.json.html', ['/route.json.html', 'route.json', 'html']]
         ],
         [
@@ -1157,9 +1157,9 @@ TEST_CASES = [
             }
         ],
         [
-            ['/route', ['/route', 'route', None]],
-            ['/route.json', ['/route.json', 'route', 'json']],
-            ['/route.json.html', ['/route.json.html', 'route.json', 'html']]
+            ['/route', ['/route', 'route', None], {'test': 'route', 'format': None}],
+            ['/route.json', ['/route.json', 'route', 'json'], {'test': 'route', 'format': 'json'}],
+            ['/route.json.html', ['/route.json.html', 'route.json', 'html'], {'test': 'route.json', 'format': 'html'}]
         ],
         [
             [{ 'test': 'route' }, '/route'],
@@ -1187,8 +1187,8 @@ TEST_CASES = [
         ],
         [
             ['/test.abc', None],
-            ['/test.z', ['/test.z', '']],
-            ['/test.abcz', ['/test.abcz', 'abc']]
+            ['/test.z', ['/test.z', ''], {'format': ''}],
+            ['/test.abcz', ['/test.abcz', 'abc'], {'format': 'abc'}]
         ],
         [
             [{}, None],
@@ -1378,38 +1378,38 @@ TEST_CASES = [
             }
         ],
         [
-            ['/123', ['/123', '123', None]],
-            ['/abc', ['/abc', None, '/abc']]
+            ['/123', ['/123', '123', None], {'test': '123'}],
+            ['/abc', ['/abc', None, '/abc'], {'test': None}]
         ]
     ],
 
     # Correct names and indexes.
-    [
-        ['/:test', '/route/:test'],
-        None,
-        [
-            {
-                'name': 'test',
-                'prefix': '/',
-                'delimiter': '/',
-                'optional': False,
-                'repeat': False,
-                'pattern': '[^/]+?'
-            },
-            {
-                'name': 'test',
-                'prefix': '/',
-                'delimiter': '/',
-                'optional': False,
-                'repeat': False,
-                'pattern': '[^/]+?'
-            }
-        ],
-        [
-            ['/test', ['/test', 'test', None]],
-            ['/route/test', ['/route/test', None, 'test']]
-        ]
-    ],
+    # [
+    #     ['/:test', '/route/:test'],
+    #     None,
+    #     [
+    #         {
+    #             'name': 'test',
+    #             'prefix': '/',
+    #             'delimiter': '/',
+    #             'optional': False,
+    #             'repeat': False,
+    #             'pattern': '[^/]+?'
+    #         },
+    #         {
+    #             'name': 'test',
+    #             'prefix': '/',
+    #             'delimiter': '/',
+    #             'optional': False,
+    #             'repeat': False,
+    #             'pattern': '[^/]+?'
+    #         }
+    #     ],
+    #     [
+    #         ['/test', ['/test', 'test', None]],
+    #         ['/route/test', ['/route/test', None, 'test']]
+    #     ]
+    # ],
     [
         [re.compile('^/([^/]+)$'), re.compile('/route/([^/]+)$')],
         None,
@@ -1551,8 +1551,8 @@ TEST_CASES = [
             ['', None],
             ['/test', None],
             ['/foo', None],
-            ['/foo/', ['/foo/', 'foo', '']],
-            ['/foo/bar', ['/foo/bar', 'foo', 'bar']]
+            ['/foo/', ['/foo/', 'foo', ''], {'foo': 'foo'}],
+            ['/foo/bar', ['/foo/bar', 'foo', 'bar'], {'foo': 'foo'}]
         ],
         [
             [{ 'foo': 'foo' }, None],
@@ -1584,7 +1584,7 @@ TEST_CASES = [
             }
         ],
         [
-            ['/match/route', ['/match/route', 'match', 'route']]
+            ['/match/route', ['/match/route', 'match', 'route'], {'foo': 'match', 'bar': 'route'}]
         ],
         [
             [{ 'foo': 'a', 'bar': 'b' }, '/a/b']
@@ -1612,9 +1612,9 @@ TEST_CASES = [
             }
         ],
         [
-            ['/endpoint/user', ['/endpoint/user', 'endpoint', 'user']],
-            ['/endpoint/user-name', ['/endpoint/user-name', 'endpoint', 'user-name']],
-            ['/foo.bar/user-name', ['/foo.bar/user-name', 'foo.bar', 'user-name']]
+            ['/endpoint/user', ['/endpoint/user', 'endpoint', 'user'], {'remote': 'endpoint', 'user': 'user'}],
+            ['/endpoint/user-name', ['/endpoint/user-name', 'endpoint', 'user-name'], {'remote': 'endpoint', 'user': 'user-name'}],
+            ['/foo.bar/user-name', ['/foo.bar/user-name', 'foo.bar', 'user-name'], {'remote': 'foo.bar', 'user': 'user-name'}]
         ],
         [
             [{ 'remote': 'foo', 'user': 'bar' }, '/foo/bar'],
@@ -1636,7 +1636,7 @@ TEST_CASES = [
             '?'
         ],
         [
-            ['/route?', ['/route?', 'route']]
+            ['/route?', ['/route?', 'route'], {'foo': 'route'}]
         ],
         [
             [{ 'foo': 'bar' }, '/bar?']
@@ -1658,7 +1658,7 @@ TEST_CASES = [
             }
         ],
         [
-            [u'/caf\u00e9', [u'/caf\u00e9', u'caf\u00e9']]
+            [u'/caf\u00e9', [u'/caf\u00e9', u'caf\u00e9'], {'foo': u'caf\u00e9'}]
         ],
         [
             [{ 'foo': u'caf\u00e9' }, '/caf%C3%A9']
@@ -1689,14 +1689,19 @@ def check_definition(path, opts, tokens, match_cases, compile_cases):
                 with nose.tools.assert_raises(Exception):
                     repath.compile(input_)
 
-    for input_, output in match_cases:
-        match = regexp.match(input_)
-        if output is None:
+    pad_case = lambda m: m.extend(['', [], {}][3 - (3 - len(m)):])
+    map(pad_case, match_cases)
+    for string, matches, named_groups in match_cases:
+        match = regexp.match(string)
+        if matches is None:
             nose.tools.assert_is_none(match)
         else:
+            groups = match.groupdict()
             nose.tools.assert_is_not_none(match)
-            nose.tools.eq_(match.group(0), output[0])
-            nose.tools.eq_(list(match.groups()), output[1:])
+            nose.tools.eq_(match.group(0), matches[0])
+            nose.tools.eq_(list(match.groups()), matches[1:])
+            for name, value in named_groups.iteritems():
+                nose.tools.assert_equal(groups[name], value, 'Expected value %r != captured %r' % (value, groups[name]))
 
 
 class Tests(unittest.TestCase):
