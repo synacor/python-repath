@@ -5,6 +5,10 @@ import nose.tools
 
 import repath
 
+def flags(options):
+    options = options or {}
+    return 0 if options.get('sensitive') else re.I
+
 
 TEST_CASES = [
     # Simple paths.
@@ -1671,7 +1675,8 @@ def test_generator():
 
 
 def check_definition(path, opts, tokens, match_cases, compile_cases):
-    regexp = repath.path_to_regexp(path, [], opts)
+    pattern = repath.path_to_pattern(path, [], opts)
+    regexp = re.compile(pattern, flags(opts))
 
     if isinstance(path, basestring):
         nose.tools.eq_(repath.parse(path), tokens)
@@ -1687,8 +1692,9 @@ def check_definition(path, opts, tokens, match_cases, compile_cases):
     for input_, output in match_cases:
         match = regexp.match(input_)
         if output is None:
-            nose.tools.eq_(match, None)
+            nose.tools.assert_is_none(match)
         else:
+            nose.tools.assert_is_not_none(match)
             nose.tools.eq_(match.group(0), output[0])
             nose.tools.eq_(list(match.groups()), output[1:])
 
@@ -1713,21 +1719,24 @@ class Tests(unittest.TestCase):
 
     def test_should_accept_array_of_keys_as_second_arg(self):
         keys = []
-        regexp = repath.path_to_regexp(self.path, keys, {'end': False})
+        pattern = repath.path_to_pattern(self.path, keys, {'end': False})
+        regexp = re.compile(pattern)
 
         # self.assertEqual(regexp.keys, keys)
         self.assertEqual(keys, [self.param])
         self.check_regex_match(regexp, '/user/123/show', '/user/123', '123')
 
     def test_should_work_with_keys_argument_as_none(self):
-        regexp = repath.path_to_regexp(self.path, None, {'end': False})
+        pattern = repath.path_to_pattern(self.path, None, {'end': False})
+        regexp = re.compile(pattern)
 
         # self.assertEqual(regexp.keys, [self.param])
         self.check_regex_match(regexp, '/user/123/show', '/user/123', '123')
 
     def test_should_expose_method_to_compile_tokens_to_regexp(self):
         tokens = repath.parse(self.path)
-        regexp = repath.tokens_to_regexp(tokens)
+        pattern = repath.tokens_to_pattern(tokens)
+        regexp = re.compile(pattern)
 
         self.check_regex_match(regexp, '/user/123', '/user/123', '123')
 

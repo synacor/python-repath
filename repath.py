@@ -160,8 +160,8 @@ def flags(options):
     return 0 if options.get('sensitive') else re.I
 
 
-def regexp_to_regexp(path, keys):
-    match = re.search(r'\((?!\?)', path.pattern)
+def regexp_to_pattern(regexp, keys):
+    match = re.search(r'\((?!\?)', regexp.pattern)
 
     if match:
         keys.extend([
@@ -176,32 +176,29 @@ def regexp_to_regexp(path, keys):
             for i in range(len(match.groups()))
         ])
 
-    return path
+    return regexp.pattern
 
 
-def array_to_regexp(paths, keys, options):
+def array_to_pattern(paths, keys, options):
     parts = [
-        path_to_regexp(path, keys, options).pattern
+        path_to_pattern(path, keys, options)
         for path in paths
     ]
 
-    # TODO: options
-    regexp = re.compile('(?:%s)' % ('|'.join(parts)))
-
-    return regexp
+    return '(?:%s)' % ('|'.join(parts))
 
 
-def string_to_regexp(path, keys, options):
+def string_to_pattern(path, keys, options):
     tokens = parse(path)
-    regexp = tokens_to_regexp(tokens, options)
+    pattern = tokens_to_pattern(tokens, options)
 
     tokens = filter(lambda t: not isinstance(t, basestring), tokens)
     keys.extend(tokens)
 
-    return regexp
+    return pattern
 
 
-def tokens_to_regexp(tokens, options=None):
+def tokens_to_pattern(tokens, options=None):
     options = options or {}
 
     strict = options.get('strict')
@@ -240,17 +237,17 @@ def tokens_to_regexp(tokens, options=None):
     else:
         route += '' if strict and endsWithSlash else '(?=/|$)'
 
-    return re.compile('^%s' % route, flags(options))
+    return '^%s' % route
 
 
-def path_to_regexp(path, keys=None, options=None):
+def path_to_pattern(path, keys=None, options=None):
     keys = keys if keys is not None else []
     options = options if options is not None else {}
 
     if isinstance(path, REGEXP_TYPE):
-        return regexp_to_regexp(path, keys)
+        return regexp_to_pattern(path, keys)
 
     if isinstance(path, list):
-        return array_to_regexp(path, keys, options)
+        return array_to_pattern(path, keys, options)
 
-    return string_to_regexp(path, keys, options)
+    return string_to_pattern(path, keys, options)
