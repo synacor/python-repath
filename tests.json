@@ -1,0 +1,2814 @@
+[
+  [
+    "/",
+    null,
+    [
+      "/"
+    ],
+    [
+      [
+        "/",
+        [
+          "/"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/"
+      ],
+      [
+        {},
+        "/"
+      ],
+      [
+        {
+          "id": 123
+        },
+        "/"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    null,
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "/test/route",
+        null
+      ],
+      [
+        "/test/",
+        [
+          "/test/"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ],
+      [
+        {},
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/test/",
+    null,
+    [
+      "/test/"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test/",
+        [
+          "/test/"
+        ]
+      ],
+      [
+        "/test//",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/test/"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    {
+      "sensitive": true
+    },
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/TEST",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/TEST",
+    {
+      "sensitive": true
+    },
+    [
+      "/TEST"
+    ],
+    [
+      [
+        "/test",
+        null
+      ],
+      [
+        "/TEST",
+        [
+          "/TEST"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/TEST"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    {
+      "strict": true
+    },
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test/",
+        null
+      ],
+      [
+        "/TEST",
+        [
+          "/TEST"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/test/",
+    {
+      "strict": true
+    },
+    [
+      "/test/"
+    ],
+    [
+      [
+        "/test",
+        null
+      ],
+      [
+        "/test/",
+        [
+          "/test/"
+        ]
+      ],
+      [
+        "/test//",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/test/"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    {
+      "end": false
+    },
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test/",
+        [
+          "/test/"
+        ]
+      ],
+      [
+        "/test/route",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/test/",
+    {
+      "end": false
+    },
+    [
+      "/test/"
+    ],
+    [
+      [
+        "/test/route",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test//",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test//route",
+        [
+          "/test"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test/"
+      ]
+    ]
+  ],
+  [
+    "/:test",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "test": "abc"
+        },
+        "/abc"
+      ]
+    ]
+  ],
+  [
+    "/:test/",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      "/"
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "abc"
+        },
+        "/abc/"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    {
+      "end": false,
+      "strict": true
+    },
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test/",
+        [
+          "/test"
+        ]
+      ],
+      [
+        "/test/route",
+        [
+          "/test"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/test/",
+    {
+      "end": false,
+      "strict": true
+    },
+    [
+      "/test/"
+    ],
+    [
+      [
+        "/test",
+        null
+      ],
+      [
+        "/test/",
+        [
+          "/test/"
+        ]
+      ],
+      [
+        "/test//",
+        [
+          "/test/"
+        ]
+      ],
+      [
+        "/test/route",
+        [
+          "/test/"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test/"
+      ]
+    ]
+  ],
+  [
+    "/test.json",
+    {
+      "end": false,
+      "strict": true
+    },
+    [
+      "/test.json"
+    ],
+    [
+      [
+        "/test.json",
+        [
+          "/test.json"
+        ]
+      ],
+      [
+        "/test.json.hbs",
+        null
+      ],
+      [
+        "/test.json/route",
+        [
+          "/test.json"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test.json"
+      ]
+    ]
+  ],
+  [
+    "/:test",
+    {
+      "end": false,
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/route/",
+        [
+          "/route",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "test": "abc"
+        },
+        "/abc"
+      ]
+    ]
+  ],
+  [
+    "/:test/",
+    {
+      "end": false,
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      "/"
+    ],
+    [
+      [
+        "/route",
+        null
+      ],
+      [
+        "/route/",
+        [
+          "/route/",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar/"
+      ]
+    ]
+  ],
+  [
+    "/test",
+    {
+      "end": false
+    },
+    [
+      "/test"
+    ],
+    [
+      [
+        "/test/route",
+        [
+          "/test"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/test"
+      ]
+    ]
+  ],
+  [
+    "/:test",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/another",
+        [
+          "/another",
+          "another"
+        ]
+      ],
+      [
+        "/something/else",
+        null
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "route.json"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ]
+    ]
+  ],
+  [
+    "/:test",
+    {
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/route/",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ]
+    ]
+  ],
+  [
+    "/:test/",
+    {
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      "/"
+    ],
+    [
+      [
+        "/route/",
+        [
+          "/route/",
+          "route"
+        ]
+      ],
+      [
+        "/route//",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route/"
+      ]
+    ]
+  ],
+  [
+    "/:test",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "route.json"
+        ]
+      ],
+      [
+        "/route//",
+        [
+          "/route",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ]
+    ]
+  ],
+  [
+    "/:test?",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": true,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/route/nested",
+        null
+      ],
+      [
+        "/",
+        [
+          "/",
+          null
+        ]
+      ],
+      [
+        "//",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        ""
+      ],
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar"
+      ]
+    ]
+  ],
+  [
+    "/:test?",
+    {
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": true,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/",
+        null
+      ],
+      [
+        "//",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        ""
+      ],
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar"
+      ]
+    ]
+  ],
+  [
+    "/:test?/",
+    {
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": true,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      "/"
+    ],
+    [
+      [
+        "/route",
+        null
+      ],
+      [
+        "/route/",
+        [
+          "/route/",
+          "route"
+        ]
+      ],
+      [
+        "/",
+        [
+          "/",
+          null
+        ]
+      ],
+      [
+        "//",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "/"
+      ],
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar/"
+      ]
+    ]
+  ],
+  [
+    "/:test+",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/",
+        null
+      ],
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/some/basic/route",
+        [
+          "/some/basic/route",
+          "some/basic/route"
+        ]
+      ],
+      [
+        "//",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar"
+      ],
+      [
+        {
+          "test": [
+            "a",
+            "b",
+            "c"
+          ]
+        },
+        "/a/b/c"
+      ]
+    ]
+  ],
+  [
+    "/:test(\\d+)+",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/abc/456/789",
+        null
+      ],
+      [
+        "/123/456/789",
+        [
+          "/123/456/789",
+          "123/456/789"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "abc"
+        },
+        null
+      ],
+      [
+        {
+          "test": 123
+        },
+        "/123"
+      ],
+      [
+        {
+          "test": [
+            1,
+            2,
+            3
+          ]
+        },
+        "/1/2/3"
+      ]
+    ]
+  ],
+  [
+    "/route.:ext(json|xml)+",
+    null,
+    [
+      "/route",
+      {
+        "delimiter": ".",
+        "name": "ext",
+        "optional": false,
+        "pattern": "json|xml",
+        "prefix": ".",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/route",
+        null
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "json"
+        ]
+      ],
+      [
+        "/route.xml.json",
+        [
+          "/route.xml.json",
+          "xml.json"
+        ]
+      ],
+      [
+        "/route.html",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "ext": "foobar"
+        },
+        null
+      ],
+      [
+        {
+          "ext": "xml"
+        },
+        "/route.xml"
+      ],
+      [
+        {
+          "ext": [
+            "xml",
+            "json"
+          ]
+        },
+        "/route.xml.json"
+      ]
+    ]
+  ],
+  [
+    "/:test*",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": true,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/",
+        [
+          "/",
+          null
+        ]
+      ],
+      [
+        "//",
+        null
+      ],
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/some/basic/route",
+        [
+          "/some/basic/route",
+          "some/basic/route"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        ""
+      ],
+      [
+        {
+          "test": "foobar"
+        },
+        "/foobar"
+      ],
+      [
+        {
+          "test": [
+            "foo",
+            "bar"
+          ]
+        },
+        "/foo/bar"
+      ]
+    ]
+  ],
+  [
+    "/route.:ext([a-z]+)*",
+    null,
+    [
+      "/route",
+      {
+        "delimiter": ".",
+        "name": "ext",
+        "optional": true,
+        "pattern": "[a-z]+",
+        "prefix": ".",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          null
+        ]
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "json"
+        ]
+      ],
+      [
+        "/route.json.xml",
+        [
+          "/route.json.xml",
+          "json.xml"
+        ]
+      ],
+      [
+        "/route.123",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        "/route"
+      ],
+      [
+        {
+          "ext": []
+        },
+        "/route"
+      ],
+      [
+        {
+          "ext": "123"
+        },
+        null
+      ],
+      [
+        {
+          "ext": "foobar"
+        },
+        "/route.foobar"
+      ],
+      [
+        {
+          "ext": [
+            "foo",
+            "bar"
+          ]
+        },
+        "/route.foo.bar"
+      ]
+    ]
+  ],
+  [
+    "/:test(\\d+)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/123",
+        [
+          "/123",
+          "123"
+        ]
+      ],
+      [
+        "/abc",
+        null
+      ],
+      [
+        "/123/abc",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "test": "abc"
+        },
+        null
+      ],
+      [
+        {
+          "test": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/:test(\\d+)",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/123",
+        [
+          "/123",
+          "123"
+        ]
+      ],
+      [
+        "/abc",
+        null
+      ],
+      [
+        "/123/abc",
+        [
+          "/123",
+          "123"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/:test(.*)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/anything/goes/here",
+        [
+          "/anything/goes/here",
+          "anything/goes/here"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": ""
+        },
+        "/"
+      ],
+      [
+        {
+          "test": "abc"
+        },
+        "/abc"
+      ],
+      [
+        {
+          "test": "abc/123"
+        },
+        "/abc%2F123"
+      ]
+    ]
+  ],
+  [
+    "/:route([a-z]+)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "route",
+        "optional": false,
+        "pattern": "[a-z]+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/abcde",
+        [
+          "/abcde",
+          "abcde"
+        ]
+      ],
+      [
+        "/12345",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "route": ""
+        },
+        null
+      ],
+      [
+        {
+          "route": "123"
+        },
+        null
+      ],
+      [
+        {
+          "route": "abc"
+        },
+        "/abc"
+      ]
+    ]
+  ],
+  [
+    "/:route(this|that)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "route",
+        "optional": false,
+        "pattern": "this|that",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/this",
+        [
+          "/this",
+          "this"
+        ]
+      ],
+      [
+        "/that",
+        [
+          "/that",
+          "that"
+        ]
+      ],
+      [
+        "/foo",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "route": "this"
+        },
+        "/this"
+      ],
+      [
+        {
+          "route": "foo"
+        },
+        null
+      ],
+      [
+        {
+          "route": "that"
+        },
+        "/that"
+      ]
+    ]
+  ],
+  [
+    "test",
+    null,
+    [
+      "test"
+    ],
+    [
+      [
+        "test",
+        [
+          "test"
+        ]
+      ],
+      [
+        "/test",
+        null
+      ]
+    ],
+    [
+      [
+        null,
+        "test"
+      ]
+    ]
+  ],
+  [
+    ":test",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "route",
+        [
+          "route",
+          "route"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "route/",
+        [
+          "route/",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": ""
+        },
+        null
+      ],
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "test": null
+        },
+        null
+      ],
+      [
+        {
+          "test": "route"
+        },
+        "route"
+      ]
+    ]
+  ],
+  [
+    ":test",
+    {
+      "strict": true
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "route",
+        [
+          "route",
+          "route"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "route/",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "route"
+      ]
+    ]
+  ],
+  [
+    ":test",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "route",
+        [
+          "route",
+          "route"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "route/",
+        [
+          "route/",
+          "route"
+        ]
+      ],
+      [
+        "route/foobar",
+        [
+          "route",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "route"
+      ]
+    ]
+  ],
+  [
+    ":test?",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": true,
+        "pattern": "[^/]+?",
+        "prefix": "",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "route",
+        [
+          "route",
+          "route"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "",
+        [
+          "",
+          null
+        ]
+      ],
+      [
+        "route/foobar",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        ""
+      ],
+      [
+        {
+          "test": ""
+        },
+        null
+      ],
+      [
+        {
+          "test": "route"
+        },
+        "route"
+      ]
+    ]
+  ],
+  [
+    "/test.json",
+    null,
+    [
+      "/test.json"
+    ],
+    [
+      [
+        "/test.json",
+        [
+          "/test.json"
+        ]
+      ],
+      [
+        "/route.json",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        "/test.json"
+      ]
+    ]
+  ],
+  [
+    "/:test.json",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      ".json"
+    ],
+    [
+      [
+        "/test.json",
+        [
+          "/test.json",
+          "test"
+        ]
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "route"
+        ]
+      ],
+      [
+        "/route.json.json",
+        [
+          "/route.json.json",
+          "route.json"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "foo"
+        },
+        "/foo.json"
+      ]
+    ]
+  ],
+  [
+    "/test.:format",
+    null,
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/test.html",
+        [
+          "/test.html",
+          "html"
+        ]
+      ],
+      [
+        "/test.hbs.html",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "format": ""
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo"
+        },
+        "/test.foo"
+      ]
+    ]
+  ],
+  [
+    "/test.:format.:format",
+    null,
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      },
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/test.html",
+        null
+      ],
+      [
+        "/test.hbs.html",
+        [
+          "/test.hbs.html",
+          "hbs",
+          "html"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "format": "foo.bar"
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo"
+        },
+        "/test.foo.foo"
+      ]
+    ]
+  ],
+  [
+    "/test.:format+",
+    null,
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": true
+      }
+    ],
+    [
+      [
+        "/test.html",
+        [
+          "/test.html",
+          "html"
+        ]
+      ],
+      [
+        "/test.hbs.html",
+        [
+          "/test.hbs.html",
+          "hbs.html"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "format": []
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo"
+        },
+        "/test.foo"
+      ],
+      [
+        {
+          "format": [
+            "foo",
+            "bar"
+          ]
+        },
+        "/test.foo.bar"
+      ]
+    ]
+  ],
+  [
+    "/test.:format",
+    {
+      "end": false
+    },
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/test.html",
+        [
+          "/test.html",
+          "html"
+        ]
+      ],
+      [
+        "/test.hbs.html",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "format": "foo"
+        },
+        "/test.foo"
+      ]
+    ]
+  ],
+  [
+    "/test.:format.",
+    null,
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      },
+      "."
+    ],
+    [
+      [
+        "/test.html.",
+        [
+          "/test.html.",
+          "html"
+        ]
+      ],
+      [
+        "/test.hbs.html",
+        null
+      ]
+    ],
+    [
+      [
+        {
+          "format": ""
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo"
+        },
+        "/test.foo."
+      ]
+    ]
+  ],
+  [
+    "/:test.:format",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route.html",
+        [
+          "/route.html",
+          "route",
+          "html"
+        ]
+      ],
+      [
+        "/route",
+        null
+      ],
+      [
+        "/route.html.json",
+        [
+          "/route.html.json",
+          "route.html",
+          "json"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "format": "foo",
+          "test": "route"
+        },
+        "/route.foo"
+      ]
+    ]
+  ],
+  [
+    "/:test.:format?",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": true,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route",
+          null
+        ]
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "route",
+          "json"
+        ]
+      ],
+      [
+        "/route.json.html",
+        [
+          "/route.json.html",
+          "route.json",
+          "html"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ],
+      [
+        {
+          "format": "",
+          "test": "route"
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo",
+          "test": "route"
+        },
+        "/route.foo"
+      ]
+    ]
+  ],
+  [
+    "/:test.:format?",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "test",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": true,
+        "pattern": "[^.]+?",
+        "prefix": ".",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/route",
+        [
+          "/route",
+          "route",
+          null
+        ]
+      ],
+      [
+        "/route.json",
+        [
+          "/route.json",
+          "route",
+          "json"
+        ]
+      ],
+      [
+        "/route.json.html",
+        [
+          "/route.json.html",
+          "route.json",
+          "html"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ],
+      [
+        {
+          "test": "route"
+        },
+        "/route"
+      ],
+      [
+        {
+          "format": "",
+          "test": "route"
+        },
+        null
+      ],
+      [
+        {
+          "format": "foo",
+          "test": "route"
+        },
+        "/route.foo"
+      ]
+    ]
+  ],
+  [
+    "/test.:format(.*)z",
+    {
+      "end": false
+    },
+    [
+      "/test",
+      {
+        "delimiter": ".",
+        "name": "format",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": ".",
+        "repeat": false
+      },
+      "z"
+    ],
+    [
+      [
+        "/test.abc",
+        null
+      ],
+      [
+        "/test.z",
+        [
+          "/test.z",
+          ""
+        ]
+      ],
+      [
+        "/test.abcz",
+        [
+          "/test.abcz",
+          "abc"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "format": ""
+        },
+        "/test.z"
+      ],
+      [
+        {
+          "format": "foo"
+        },
+        "/test.fooz"
+      ]
+    ]
+  ],
+  [
+    "/(\\d+)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/123",
+        [
+          "/123",
+          "123"
+        ]
+      ],
+      [
+        "/abc",
+        null
+      ],
+      [
+        "/123/abc",
+        null
+      ]
+    ],
+    [
+      [
+        {},
+        null
+      ],
+      [
+        {
+          "0": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/(\\d+)",
+    {
+      "end": false
+    },
+    [
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/123",
+        [
+          "/123",
+          "123"
+        ]
+      ],
+      [
+        "/abc",
+        null
+      ],
+      [
+        "/123/abc",
+        [
+          "/123",
+          "123"
+        ]
+      ],
+      [
+        "/123/",
+        [
+          "/123/",
+          "123"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "0": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/(\\d+)?",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": true,
+        "pattern": "\\d+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/",
+        [
+          "/",
+          null
+        ]
+      ],
+      [
+        "/123",
+        [
+          "/123",
+          "123"
+        ]
+      ]
+    ],
+    [
+      [
+        {},
+        ""
+      ],
+      [
+        {
+          "0": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/(.*)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/",
+        [
+          "/",
+          ""
+        ]
+      ],
+      [
+        "/route",
+        [
+          "/route",
+          "route"
+        ]
+      ],
+      [
+        "/route/nested",
+        [
+          "/route/nested",
+          "route/nested"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "0": ""
+        },
+        "/"
+      ],
+      [
+        {
+          "0": "123"
+        },
+        "/123"
+      ]
+    ]
+  ],
+  [
+    "/\\(testing\\)",
+    null,
+    [
+      "/(testing)"
+    ],
+    [
+      [
+        "/testing",
+        null
+      ],
+      [
+        "/(testing)",
+        [
+          "/(testing)"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/(testing)"
+      ]
+    ]
+  ],
+  [
+    "/.+\\*?=^!:${}[]|",
+    null,
+    [
+      "/.+*?=^!:${}[]|"
+    ],
+    [
+      [
+        "/.+*?=^!:${}[]|",
+        [
+          "/.+*?=^!:${}[]|"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        "/.+*?=^!:${}[]|"
+      ]
+    ]
+  ],
+  [
+    "/*",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "",
+        null
+      ],
+      [
+        "/",
+        [
+          "/",
+          ""
+        ]
+      ],
+      [
+        "/foo/bar",
+        [
+          "/foo/bar",
+          "foo/bar"
+        ]
+      ]
+    ],
+    [
+      [
+        null,
+        null
+      ],
+      [
+        {
+          "0": ""
+        },
+        "/"
+      ],
+      [
+        {
+          "0": "foobar"
+        },
+        "/foobar"
+      ]
+    ]
+  ],
+  [
+    "/foo/*",
+    null,
+    [
+      "/foo",
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "",
+        null
+      ],
+      [
+        "/test",
+        null
+      ],
+      [
+        "/foo",
+        null
+      ],
+      [
+        "/foo/",
+        [
+          "/foo/",
+          ""
+        ]
+      ],
+      [
+        "/foo/bar",
+        [
+          "/foo/bar",
+          "bar"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "0": "bar"
+        },
+        "/foo/bar"
+      ]
+    ]
+  ],
+  [
+    "/:foo/*",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "foo",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": "/",
+        "name": "0",
+        "optional": false,
+        "pattern": ".*",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "",
+        null
+      ],
+      [
+        "/test",
+        null
+      ],
+      [
+        "/foo",
+        null
+      ],
+      [
+        "/foo/",
+        [
+          "/foo/",
+          "foo",
+          ""
+        ]
+      ],
+      [
+        "/foo/bar",
+        [
+          "/foo/bar",
+          "foo",
+          "bar"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "foo": "foo"
+        },
+        null
+      ],
+      [
+        {
+          "0": "bar"
+        },
+        null
+      ],
+      [
+        {
+          "0": "bar",
+          "foo": "foo"
+        },
+        "/foo/bar"
+      ]
+    ]
+  ],
+  [
+    "/:foo/:bar",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "foo",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": "/",
+        "name": "bar",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/match/route",
+        [
+          "/match/route",
+          "match",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "bar": "b",
+          "foo": "a"
+        },
+        "/a/b"
+      ]
+    ]
+  ],
+  [
+    "/:remote([\\w\\-.]+)/:user([\\w\\-]+)",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "remote",
+        "optional": false,
+        "pattern": "[\\w\\-.]+",
+        "prefix": "/",
+        "repeat": false
+      },
+      {
+        "delimiter": "/",
+        "name": "user",
+        "optional": false,
+        "pattern": "[\\w\\-]+",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/endpoint/user",
+        [
+          "/endpoint/user",
+          "endpoint",
+          "user"
+        ]
+      ],
+      [
+        "/endpoint/user-name",
+        [
+          "/endpoint/user-name",
+          "endpoint",
+          "user-name"
+        ]
+      ],
+      [
+        "/foo.bar/user-name",
+        [
+          "/foo.bar/user-name",
+          "foo.bar",
+          "user-name"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "remote": "foo",
+          "user": "bar"
+        },
+        "/foo/bar"
+      ],
+      [
+        {
+          "remote": "foo.bar",
+          "user": "uno"
+        },
+        "/foo.bar/uno"
+      ]
+    ]
+  ],
+  [
+    "/:foo\\?",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "foo",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      },
+      "?"
+    ],
+    [
+      [
+        "/route?",
+        [
+          "/route?",
+          "route"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "foo": "bar"
+        },
+        "/bar?"
+      ]
+    ]
+  ],
+  [
+    "/:foo",
+    null,
+    [
+      {
+        "delimiter": "/",
+        "name": "foo",
+        "optional": false,
+        "pattern": "[^/]+?",
+        "prefix": "/",
+        "repeat": false
+      }
+    ],
+    [
+      [
+        "/caf\u00e9",
+        [
+          "/caf\u00e9",
+          "caf\u00e9"
+        ]
+      ]
+    ],
+    [
+      [
+        {
+          "foo": "caf\u00e9"
+        },
+        "/caf%C3%A9"
+      ]
+    ]
+  ]
+]
