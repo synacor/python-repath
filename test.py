@@ -1,4 +1,4 @@
-import json
+import re
 import unittest
 
 import nose.tools
@@ -6,31 +6,1685 @@ import nose.tools
 import repath
 
 
+TEST_CASES = [
+    # Simple paths.
+    [
+        '/',
+        None,
+        [
+            '/'
+        ],
+        [
+            ['/', ['/']],
+            ['/route', None]
+        ],
+        [
+            [None, '/'],
+            [{}, '/'],
+            [{ 'id': 123 }, '/']
+        ]
+    ],
+    [
+        '/test',
+        None,
+        [
+            '/test'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/route', None],
+            ['/test/route', None],
+            ['/test/', ['/test/']]
+        ],
+        [
+            [None, '/test'],
+            [{}, '/test']
+        ]
+    ],
+    [
+        '/test/',
+        None,
+        [
+            '/test/'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/test/', ['/test/']],
+            ['/test//', None]
+        ],
+        [
+            [None, '/test/']
+        ]
+    ],
+
+    # Case-sensitive paths.
+    
+    [
+        '/test',
+        {
+            'sensitive': True
+        },
+        [
+            '/test'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/TEST', None]
+        ],
+        [
+            [None, '/test']
+        ]
+    ],
+    [
+        '/TEST',
+        {
+            'sensitive': True
+        },
+        [
+            '/TEST'
+        ],
+        [
+            ['/test', None],
+            ['/TEST', ['/TEST']]
+        ],
+        [
+            [None, '/TEST']
+        ]
+    ],
+
+    # Strict mode.
+    
+    [
+        '/test',
+        {
+            'strict': True
+        },
+        [
+            '/test'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/test/', None],
+            ['/TEST', ['/TEST']]
+        ],
+        [
+            [None, '/test']
+        ]
+    ],
+    [
+        '/test/',
+        {
+            'strict': True
+        },
+        [
+            '/test/'
+        ],
+        [
+            ['/test', None],
+            ['/test/', ['/test/']],
+            ['/test//', None]
+        ],
+        [
+            [None, '/test/']
+        ]
+    ],
+
+    # Non-ending mode.
+    
+    [
+        '/test',
+        {
+            'end': False
+        },
+        [
+            '/test'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/test/', ['/test/']],
+            ['/test/route', ['/test']],
+            ['/route', None]
+        ],
+        [
+            [None, '/test']
+        ]
+    ],
+    [
+        '/test/',
+        {
+            'end': False
+        },
+        [
+            '/test/'
+        ],
+        [
+            ['/test/route', ['/test']],
+            ['/test//', ['/test']],
+            ['/test//route', ['/test']]
+        ],
+        [
+            [None, '/test/']
+        ]
+    ],
+    [
+        '/:test',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']]
+        ],
+        [
+            [{}, None],
+            [{ 'test': 'abc' }, '/abc']
+        ]
+    ],
+    [
+        '/:test/',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '/'
+        ],
+        [
+            ['/route', ['/route', 'route']]
+        ],
+        [
+            [{ 'test': 'abc' }, '/abc/']
+        ]
+    ],
+
+    # Combine modes.
+    
+    [
+        '/test',
+        {
+            'end': False,
+            'strict': True
+        },
+        [
+            '/test'
+        ],
+        [
+            ['/test', ['/test']],
+            ['/test/', ['/test']],
+            ['/test/route', ['/test']]
+        ],
+        [
+            [None, '/test']
+        ]
+    ],
+    [
+        '/test/',
+        {
+            'end': False,
+            'strict': True
+        },
+        [
+            '/test/'
+        ],
+        [
+            ['/test', None],
+            ['/test/', ['/test/']],
+            ['/test//', ['/test/']],
+            ['/test/route', ['/test/']]
+        ],
+        [
+            [None, '/test/']
+        ]
+    ],
+    [
+        '/test.json',
+        {
+            'end': False,
+            'strict': True
+        },
+        [
+            '/test.json'
+        ],
+        [
+            ['/test.json', ['/test.json']],
+            ['/test.json.hbs', None],
+            ['/test.json/route', ['/test.json']]
+        ],
+        [
+            [None, '/test.json']
+        ]
+    ],
+    [
+        '/:test',
+        {
+            'end': False,
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']],
+            ['/route/', ['/route', 'route']]
+        ],
+        [
+            [{}, None],
+            [{ 'test': 'abc' }, '/abc']
+        ]
+    ],
+    [
+        '/:test/',
+        {
+            'end': False,
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '/'
+        ],
+        [
+            ['/route', None],
+            ['/route/', ['/route/', 'route']]
+        ],
+        [
+            [{ 'test': 'foobar' }, '/foobar/']
+        ]
+    ],
+
+    # Arrays of simple paths.
+    
+    [
+        ['/one', '/two'],
+        None,
+        [],
+        [
+            ['/one', ['/one']],
+            ['/two', ['/two']],
+            ['/three', None],
+            ['/one/two', None]
+        ]
+    ],
+
+    # Non-ending simple path.
+    
+    [
+        '/test',
+        {
+            'end': False
+        },
+        [
+            '/test'
+        ],
+        [
+            ['/test/route', ['/test']]
+        ],
+        [
+            [None, '/test']
+        ]
+    ],
+
+    # Single named parameter.
+    [
+        '/:test',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']],
+            ['/another', ['/another', 'another']],
+            ['/something/else', None],
+            ['/route.json', ['/route.json', 'route.json']]
+        ],
+        [
+            [{ 'test': 'route' }, '/route']
+        ]
+    ],
+    [
+        '/:test',
+        {
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']],
+            ['/route/', None]
+        ],
+        [
+            [{ 'test': 'route' }, '/route']
+        ]
+    ],
+    [
+        '/:test/',
+        {
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '/'
+        ],
+        [
+            ['/route/', ['/route/', 'route']],
+            ['/route//', None]
+        ],
+        [
+            [{ 'test': 'route' }, '/route/']
+        ]
+    ],
+    [
+        '/:test',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route.json', ['/route.json', 'route.json']],
+            ['/route//', ['/route', 'route']]
+        ],
+        [
+            [{ 'test': 'route' }, '/route']
+        ]
+    ],
+
+    # Optional named parameter.
+    
+    [
+        '/:test?',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']],
+            ['/route/nested', None],
+            ['/', ['/', None]],
+            ['//', None]
+        ],
+        [
+            [None, ''],
+            [{ 'test': 'foobar' }, '/foobar']
+        ]
+    ],
+    [
+        '/:test?',
+        {
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route']],
+            ['/', None], # Questionable behaviour.
+            ['//', None]
+        ],
+        [
+            [None, ''],
+            [{ 'test': 'foobar' }, '/foobar']
+        ]
+    ],
+    [
+        '/:test?/',
+        {
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '/'
+        ],
+        [
+            ['/route', None],
+            ['/route/', ['/route/', 'route']],
+            ['/', ['/', None]],
+            ['//', None]
+        ],
+        [
+            [None, '/'],
+            [{ 'test': 'foobar' }, '/foobar/']
+        ]
+    ],
+
+    # Repeated one or more times parameters.
+    [
+        '/:test+',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': True,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/', None],
+            ['/route', ['/route', 'route']],
+            ['/some/basic/route', ['/some/basic/route', 'some/basic/route']],
+            ['//', None]
+        ],
+        [
+            [{}, None],
+            [{ 'test': 'foobar' }, '/foobar'],
+            [{ 'test': ['a', 'b', 'c'] }, '/a/b/c']
+        ]
+    ],
+    [
+        '/:test(\\d+)+',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': True,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/abc/456/789', None],
+            ['/123/456/789', ['/123/456/789', '123/456/789']]
+        ],
+        [
+            [{ 'test': 'abc' }, None],
+            [{ 'test': 123 }, '/123'],
+            [{ 'test': [1, 2, 3] }, '/1/2/3']
+        ]
+    ],
+    [
+        '/route.:ext(json|xml)+',
+        None,
+        [
+            '/route',
+            {
+                'name': 'ext',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': True,
+                'pattern': 'json|xml'
+            }
+        ],
+        [
+            ['/route', None],
+            ['/route.json', ['/route.json', 'json']],
+            ['/route.xml.json', ['/route.xml.json', 'xml.json']],
+            ['/route.html', None]
+        ],
+        [
+            [{ 'ext': 'foobar' }, None],
+            [{ 'ext': 'xml' }, '/route.xml'],
+            [{ 'ext': ['xml', 'json'] }, '/route.xml.json']
+        ]
+    ],
+
+    # Repeated zero or more times parameters.
+    
+    [
+        '/:test*',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': True,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/', ['/', None]],
+            ['//', None],
+            ['/route', ['/route', 'route']],
+            ['/some/basic/route', ['/some/basic/route', 'some/basic/route']]
+        ],
+        [
+            [{}, ''],
+            [{ 'test': 'foobar' }, '/foobar'],
+            [{ 'test': ['foo', 'bar'] }, '/foo/bar']
+        ]
+    ],
+    [
+        '/route.:ext([a-z]+)*',
+        None,
+        [
+            '/route',
+            {
+                'name': 'ext',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': True,
+                'repeat': True,
+                'pattern': '[a-z]+'
+            }
+        ],
+        [
+            ['/route', ['/route', None]],
+            ['/route.json', ['/route.json', 'json']],
+            ['/route.json.xml', ['/route.json.xml', 'json.xml']],
+            ['/route.123', None]
+        ],
+        [
+            [{}, '/route'],
+            [{ 'ext': [] }, '/route'],
+            [{ 'ext': '123' }, None],
+            [{ 'ext': 'foobar' }, '/route.foobar'],
+            [{ 'ext': ['foo', 'bar'] }, '/route.foo.bar']
+        ]
+    ],
+
+    # Custom named parameters.
+    
+    [
+        '/:test(\\d+)',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/123', ['/123', '123']],
+            ['/abc', None],
+            ['/123/abc', None]
+        ],
+        [
+            [{ 'test': 'abc' }, None],
+            [{ 'test': '123' }, '/123']
+        ]
+    ],
+    [
+        '/:test(\\d+)',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/123', ['/123', '123']],
+            ['/abc', None],
+            ['/123/abc', ['/123', '123']]
+        ],
+        [
+            [{ 'test': '123' }, '/123']
+        ]
+    ],
+    [
+        '/:test(.*)',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            }
+        ],
+        [
+            ['/anything/goes/here', ['/anything/goes/here', 'anything/goes/here']]
+        ],
+        [
+            [{ 'test': '' }, '/'],
+            [{ 'test': 'abc' }, '/abc'],
+            [{ 'test': 'abc/123' }, '/abc%2F123']
+        ]
+    ],
+    [
+        '/:route([a-z]+)',
+        None,
+        [
+            {
+                'name': 'route',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[a-z]+'
+            }
+        ],
+        [
+            ['/abcde', ['/abcde', 'abcde']],
+            ['/12345', None]
+        ],
+        [
+            [{ 'route': '' }, None],
+            [{ 'route': '123' }, None],
+            [{ 'route': 'abc' }, '/abc']
+        ]
+    ],
+    [
+        '/:route(this|that)',
+        None,
+        [
+            {
+                'name': 'route',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': 'this|that'
+            }
+        ],
+        [
+            ['/this', ['/this', 'this']],
+            ['/that', ['/that', 'that']],
+            ['/foo', None]
+        ],
+        [
+            [{ 'route': 'this' }, '/this'],
+            [{ 'route': 'foo' }, None],
+            [{ 'route': 'that' }, '/that']
+        ]
+    ],
+
+    # Prefixed slashes could be omitted.
+    
+    [
+        'test',
+        None,
+        [
+            'test'
+        ],
+        [
+            ['test', ['test']],
+            ['/test', None]
+        ],
+        [
+            [None, 'test']
+        ]
+    ],
+    [
+        ':test',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['route', ['route', 'route']],
+            ['/route', None],
+            ['route/', ['route/', 'route']]
+        ],
+        [
+            [{ 'test': '' }, None],
+            [{}, None],
+            [{ 'test': None }, None],
+            [{ 'test': 'route' }, 'route']
+        ]
+    ],
+    [
+        ':test',
+        {
+            'strict': True
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['route', ['route', 'route']],
+            ['/route', None],
+            ['route/', None]
+        ],
+        [
+            [{ 'test': 'route' }, 'route']
+        ]
+    ],
+    [
+        ':test',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['route', ['route', 'route']],
+            ['/route', None],
+            ['route/', ['route/', 'route']],
+            ['route/foobar', ['route', 'route']]
+        ],
+        [
+            [{ 'test': 'route' }, 'route']
+        ]
+    ],
+    [
+        ':test?',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['route', ['route', 'route']],
+            ['/route', None],
+            ['', ['', None]],
+            ['route/foobar', None]
+        ],
+        [
+            [{}, ''],
+            [{ 'test': '' }, None],
+            [{ 'test': 'route' }, 'route']
+        ]
+    ],
+
+    # Formats.
+    
+    [
+        '/test.json',
+        None,
+        [
+            '/test.json'
+        ],
+        [
+            ['/test.json', ['/test.json']],
+            ['/route.json', None]
+        ],
+        [
+            [{}, '/test.json']
+        ]
+    ],
+    [
+        '/:test.json',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '.json'
+        ],
+        [
+            ['/test.json', ['/test.json', 'test']],
+            ['/route.json', ['/route.json', 'route']],
+            ['/route.json.json', ['/route.json.json', 'route.json']]
+        ],
+        [
+            [{ 'test': 'foo' }, '/foo.json']
+        ]
+    ],
+
+    # Format params.
+    
+    [
+        '/test.:format',
+        None,
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/test.html', ['/test.html', 'html']],
+            ['/test.hbs.html', None]
+        ],
+        [
+            [{}, None],
+            [{ 'format': '' }, None],
+            [{ 'format': 'foo' }, '/test.foo']
+        ]
+    ],
+    [
+        '/test.:format.:format',
+        None,
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            },
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/test.html', None],
+            ['/test.hbs.html', ['/test.hbs.html', 'hbs', 'html']]
+        ],
+        [
+            [{ 'format': 'foo.bar' }, None],
+            [{ 'format': 'foo' }, '/test.foo.foo']
+        ]
+    ],
+    [
+        '/test.:format+',
+        None,
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': True,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/test.html', ['/test.html', 'html']],
+            ['/test.hbs.html', ['/test.hbs.html', 'hbs.html']]
+        ],
+        [
+            [{ 'format': [] }, None],
+            [{ 'format': 'foo' }, '/test.foo'],
+            [{ 'format': ['foo', 'bar'] }, '/test.foo.bar']
+        ]
+    ],
+    [
+        '/test.:format',
+        {
+            'end': False
+        },
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/test.html', ['/test.html', 'html']],
+            ['/test.hbs.html', None]
+        ],
+        [
+            [{ 'format': 'foo' }, '/test.foo']
+        ]
+    ],
+    [
+        '/test.:format.',
+        None,
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            },
+            '.'
+        ],
+        [
+            ['/test.html.', ['/test.html.', 'html']],
+            ['/test.hbs.html', None]
+        ],
+        [
+            [{ 'format': '' }, None],
+            [{ 'format': 'foo' }, '/test.foo.']
+        ]
+    ],
+
+    # Format and path params.
+    
+    [
+        '/:test.:format',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/route.html', ['/route.html', 'route', 'html']],
+            ['/route', None],
+            ['/route.html.json', ['/route.html.json', 'route.html', 'json']]
+        ],
+        [
+            [{}, None],
+            [{ 'test': 'route', 'format': 'foo' }, '/route.foo']
+        ]
+    ],
+    [
+        '/:test.:format?',
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route', None]],
+            ['/route.json', ['/route.json', 'route', 'json']],
+            ['/route.json.html', ['/route.json.html', 'route.json', 'html']]
+        ],
+        [
+            [{ 'test': 'route' }, '/route'],
+            [{ 'test': 'route', 'format': '' }, None],
+            [{ 'test': 'route', 'format': 'foo' }, '/route.foo']
+        ]
+    ],
+    [
+        '/:test.:format?',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': True,
+                'repeat': False,
+                'pattern': '[^.]+?'
+            }
+        ],
+        [
+            ['/route', ['/route', 'route', None]],
+            ['/route.json', ['/route.json', 'route', 'json']],
+            ['/route.json.html', ['/route.json.html', 'route.json', 'html']]
+        ],
+        [
+            [{ 'test': 'route' }, '/route'],
+            [{ 'test': 'route', 'format': None }, '/route'],
+            [{ 'test': 'route', 'format': '' }, None],
+            [{ 'test': 'route', 'format': 'foo' }, '/route.foo']
+        ]
+    ],
+    [
+        '/test.:format(.*)z',
+        {
+            'end': False
+        },
+        [
+            '/test',
+            {
+                'name': 'format',
+                'prefix': '.',
+                'delimiter': '.',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            },
+            'z'
+        ],
+        [
+            ['/test.abc', None],
+            ['/test.z', ['/test.z', '']],
+            ['/test.abcz', ['/test.abcz', 'abc']]
+        ],
+        [
+            [{}, None],
+            [{ 'format': '' }, '/test.z'],
+            [{ 'format': 'foo' }, '/test.fooz']
+        ]
+    ],
+
+    # Unnamed params.
+    
+    [
+        '/(\\d+)',
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/123', ['/123', '123']],
+            ['/abc', None],
+            ['/123/abc', None]
+        ],
+        [
+            [{}, None],
+            [{ '0': '123' }, '/123']
+        ]
+    ],
+    [
+        '/(\\d+)',
+        {
+            'end': False
+        },
+        [
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/123', ['/123', '123']],
+            ['/abc', None],
+            ['/123/abc', ['/123', '123']],
+            ['/123/', ['/123/', '123']]
+        ],
+        [
+            [{ '0': '123' }, '/123']
+        ]
+    ],
+    [
+        '/(\\d+)?',
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': True,
+                'repeat': False,
+                'pattern': '\\d+'
+            }
+        ],
+        [
+            ['/', ['/', None]],
+            ['/123', ['/123', '123']]
+        ],
+        [
+            [{}, ''],
+            [{ '0': '123' }, '/123']
+        ]
+    ],
+    [
+        '/(.*)',
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            }
+        ],
+        [
+            ['/', ['/', '']],
+            ['/route', ['/route', 'route']],
+            ['/route/nested', ['/route/nested', 'route/nested']]
+        ],
+        [
+            [{ '0': '' }, '/'],
+            [{ '0': '123' }, '/123']
+        ]
+    ],
+
+    # Regexps.
+    [
+        re.compile('.*'),
+        None,
+        [],
+        [
+            ['/match/anything', ['/match/anything']]
+        ]
+    ],
+    [
+        re.compile('(.*)'),
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            }
+        ],
+        [
+            ['/match/anything', ['/match/anything', '/match/anything']]
+        ]
+    ],
+    [
+        re.compile('/(\\d+)'),
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            }
+        ],
+        [
+            ['/abc', None],
+            ['/123', ['/123', '123']]
+        ]
+    ],
+
+    # Mixed arrays.
+    [
+        ['/test', re.compile('/(\\d+)')],
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            }
+        ],
+        [
+            ['/test', ['/test', None]]
+        ]
+    ],
+    [
+        ['/:test(\\d+)', re.compile('(.*)')],
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '\\d+'
+            },
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            }
+        ],
+        [
+            ['/123', ['/123', '123', None]],
+            ['/abc', ['/abc', None, '/abc']]
+        ]
+    ],
+
+    # Correct names and indexes.
+    [
+        ['/:test', '/route/:test'],
+        None,
+        [
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': 'test',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/test', ['/test', 'test', None]],
+            ['/route/test', ['/route/test', None, 'test']]
+        ]
+    ],
+    [
+        [re.compile('^/([^/]+)$'), re.compile('/route/([^/]+)$')],
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            },
+            {
+                'name': '0',
+                'prefix': None,
+                'delimiter': None,
+                'optional': False,
+                'repeat': False,
+                'pattern': None
+            }
+        ],
+        [
+            ['/test', ['/test', 'test', None]],
+            ['/route/test', ['/route/test', None, 'test']]
+        ]
+    ],
+
+    # Ignore non-matching groups in regexps.
+    [
+        re.compile('(?:.*)'),
+        None,
+        [],
+        [
+            ['/anything/you/want', ['/anything/you/want']]
+        ]
+    ],
+
+    # Respect escaped characters.
+    [
+        '/\\(testing\\)',
+        None,
+        [
+            '/(testing)'
+        ],
+        [
+            ['/testing', None],
+            ['/(testing)', ['/(testing)']]
+        ],
+        [
+            [None, '/(testing)']
+        ]
+    ],
+    [
+        '/.+\\*?=^!:${}[]|',
+        None,
+        [
+            '/.+*?=^!:${}[]|'
+        ],
+        [
+            ['/.+*?=^!:${}[]|', ['/.+*?=^!:${}[]|']]
+        ],
+        [
+            [None, '/.+*?=^!:${}[]|']
+        ]
+    ],
+
+    # Asterisk functionality.
+    [
+        '/*',
+        None,
+        [
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            }
+        ],
+        [
+            ['', None],
+            ['/', ['/', '']],
+            ['/foo/bar', ['/foo/bar', 'foo/bar']]
+        ],
+        [
+            [None, None],
+            [{ '0': '' }, '/'],
+            [{ '0': 'foobar' }, '/foobar']
+        ]
+    ],
+    [
+        '/foo/*',
+        None,
+        [
+            '/foo',
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            }
+        ],
+        [
+            ['', None],
+            ['/test', None],
+            ['/foo', None],
+            ['/foo/', ['/foo/', '']],
+            ['/foo/bar', ['/foo/bar', 'bar']]
+        ],
+        [
+            [{ '0': 'bar' }, '/foo/bar']
+        ]
+    ],
+    [
+        '/:foo/*',
+        None,
+        [
+            {
+                'name': 'foo',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': '0',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '.*'
+            }
+        ],
+        [
+            ['', None],
+            ['/test', None],
+            ['/foo', None],
+            ['/foo/', ['/foo/', 'foo', '']],
+            ['/foo/bar', ['/foo/bar', 'foo', 'bar']]
+        ],
+        [
+            [{ 'foo': 'foo' }, None],
+            [{ '0': 'bar' }, None],
+            [{ 'foo': 'foo', '0': 'bar' }, '/foo/bar']
+        ]
+    ],
+
+    # Random examples.
+    [
+        '/:foo/:bar',
+        None,
+        [
+            {
+                'name': 'foo',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            {
+                'name': 'bar',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            ['/match/route', ['/match/route', 'match', 'route']]
+        ],
+        [
+            [{ 'foo': 'a', 'bar': 'b' }, '/a/b']
+        ]
+    ],
+    [
+        '/:remote([\\w\-.]+)/:user([\\w\-]+)',
+        None,
+        [
+            {
+                'name': 'remote',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[\\w\-.]+'
+            },
+            {
+                'name': 'user',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[\\w\-]+'
+            }
+        ],
+        [
+            ['/endpoint/user', ['/endpoint/user', 'endpoint', 'user']],
+            ['/endpoint/user-name', ['/endpoint/user-name', 'endpoint', 'user-name']],
+            ['/foo.bar/user-name', ['/foo.bar/user-name', 'foo.bar', 'user-name']]
+        ],
+        [
+            [{ 'remote': 'foo', 'user': 'bar' }, '/foo/bar'],
+            [{ 'remote': 'foo.bar', 'user': 'uno' }, '/foo.bar/uno']
+        ]
+    ],
+    [
+        '/:foo\\?',
+        None,
+        [
+            {
+                'name': 'foo',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            },
+            '?'
+        ],
+        [
+            ['/route?', ['/route?', 'route']]
+        ],
+        [
+            [{ 'foo': 'bar' }, '/bar?']
+        ]
+    ],
+
+    # Unicode characters.
+    [
+        '/:foo',
+        None,
+        [
+            {
+                'name': 'foo',
+                'prefix': '/',
+                'delimiter': '/',
+                'optional': False,
+                'repeat': False,
+                'pattern': '[^/]+?'
+            }
+        ],
+        [
+            [u'/caf\u00e9', [u'/caf\u00e9', u'caf\u00e9']]
+        ],
+        [
+            [{ 'foo': u'caf\u00e9' }, '/caf%C3%A9']
+        ]
+    ]
+]
+
+
 def test_generator():
-    with open('tests.json') as f:
-        definitions = json.loads(f.read())
+    for case in TEST_CASES:
+        case.extend([[]] * (5 - len(case)))
+        path, opts, tokens, match_cases, compile_cases = case
+        yield check_definition, path, opts, tokens, match_cases, compile_cases
 
-    for definition in definitions:
-        yield check_definition, definition
 
-
-def check_definition(definition):
-    definition.extend([[]] * (5 - len(definition)))
-    path, opts, tokens, matchCases, compileCases = definition
+def check_definition(path, opts, tokens, match_cases, compile_cases):
     regexp = repath.path_to_regexp(path, [], opts)
 
     if isinstance(path, basestring):
         nose.tools.eq_(repath.parse(path), tokens)
 
-    compiled = repath.compile(path)
-    for input_, output in compileCases:
-        if output is not None:
-            nose.tools.eq_(compiled(input_), output)
-        else:
-            with nose.tools.assert_raises(Exception):
-                repath.compile(input_)
+        compiled = repath.compile(path)
+        for input_, output in compile_cases:
+            if output is not None:
+                nose.tools.eq_(compiled(input_), output)
+            else:
+                with nose.tools.assert_raises(Exception):
+                    repath.compile(input_)
 
-    for input_, output in matchCases:
+    for input_, output in match_cases:
         match = regexp.match(input_)
         if output is None:
             nose.tools.eq_(match, None)
