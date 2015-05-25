@@ -16,6 +16,18 @@ PATH_REGEXP = re.compile('|'.join([
 ]))
 
 
+def escape_string(string):
+    """
+    Escape URL-acceptable regex special-characters.
+
+    """
+    return re.sub('([.+*?=^!:${}()[\\]|])', r'\\\1', string)
+
+
+def escape_group(group):
+    return re.sub('([=!:$()])', r'\\\1', group)
+
+
 def parse(string):
     """
     Parse a string for the raw tokens.
@@ -71,14 +83,6 @@ def parse(string):
         tokens.append(path)
 
     return tokens
-
-
-def compile(string):
-    """
-    Compile a string to a template function for the path.
-
-    """
-    return tokens_to_function(parse(string))
 
 
 def tokens_to_function(tokens):
@@ -145,18 +149,6 @@ def tokens_to_function(tokens):
     return transform
 
 
-def escape_string(string):
-    """
-    Escape URL-acceptable regex special-characters.
-
-    """
-    return re.sub('([.+*?=^!:${}()[\\]|])', r'\\\1', string)
-
-
-def escape_group(group):
-    return re.sub('([=!:$()])', r'\\\1', group)
-
-
 def regexp_to_pattern(regexp, keys):
     """
     Generate a pattern based on a compiled regular expression.
@@ -182,35 +174,6 @@ def regexp_to_pattern(regexp, keys):
         ])
 
     return regexp.pattern
-
-
-def array_to_pattern(paths, keys, options):
-    """
-    Generate a single pattern from an array of path pattern values.
-
-    """
-    parts = [
-        path_to_pattern(path, keys, options)
-        for path in paths
-    ]
-
-    return '(?:%s)' % ('|'.join(parts))
-
-
-def string_to_pattern(path, keys, options):
-    """
-    Generate pattern for a string.
-
-    Equivalent to `tokens_to_pattern(parse(string))`.
-
-    """
-    tokens = parse(path)
-    pattern = tokens_to_pattern(tokens, options)
-
-    tokens = filter(lambda t: not isinstance(t, basestring), tokens)
-    keys.extend(tokens)
-
-    return pattern
 
 
 def tokens_to_pattern(tokens, options=None):
@@ -264,6 +227,35 @@ def tokens_to_pattern(tokens, options=None):
     return '^%s' % route
 
 
+def array_to_pattern(paths, keys, options):
+    """
+    Generate a single pattern from an array of path pattern values.
+
+    """
+    parts = [
+        path_to_pattern(path, keys, options)
+        for path in paths
+    ]
+
+    return '(?:%s)' % ('|'.join(parts))
+
+
+def string_to_pattern(path, keys, options):
+    """
+    Generate pattern for a string.
+
+    Equivalent to `tokens_to_pattern(parse(string))`.
+
+    """
+    tokens = parse(path)
+    pattern = tokens_to_pattern(tokens, options)
+
+    tokens = filter(lambda t: not isinstance(t, basestring), tokens)
+    keys.extend(tokens)
+
+    return pattern
+
+
 def path_to_pattern(path, keys=None, options=None):
     """
     Generate a pattern from any kind of path value.
@@ -280,3 +272,11 @@ def path_to_pattern(path, keys=None, options=None):
     if isinstance(path, list):
         return array_to_pattern(path, keys, options)
     return string_to_pattern(path, keys, options)
+
+
+def compile(string):
+    """
+    Compile a string to a template function for the path.
+
+    """
+    return tokens_to_function(parse(string))
