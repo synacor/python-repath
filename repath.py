@@ -29,9 +29,6 @@ def parse(string):
     path = ''
 
     for match in PATH_REGEXP.finditer(string):
-        if match is None:
-            break
-
         matched = match.group(0)
         escaped = match.group(1)
         offset = match.start(0)
@@ -149,6 +146,10 @@ def tokens_to_function(tokens):
 
 
 def escape_string(string):
+    """
+    Escape URL-acceptable regex special-characters.
+
+    """
     return re.sub('([.+*?=^!:${}()[\\]|])', r'\\\1', string)
 
 
@@ -156,11 +157,15 @@ def escape_group(group):
     return re.sub('([=!:$()])', r'\\\1', group)
 
 
-def flags(options):
-    return 0 if options.get('sensitive') else re.I
-
-
 def regexp_to_pattern(regexp, keys):
+    """
+    Generate a pattern based on a compiled regular expression.
+
+    This function exists for a semblance of compatibility with pathToRegexp
+    and serves basically no purpose beyond making sure the pre-existing tests
+    continue to pass.
+
+    """
     match = re.search(r'\((?!\?)', regexp.pattern)
 
     if match:
@@ -180,6 +185,10 @@ def regexp_to_pattern(regexp, keys):
 
 
 def array_to_pattern(paths, keys, options):
+    """
+    Generate a single pattern from an array of path pattern values.
+
+    """
     parts = [
         path_to_pattern(path, keys, options)
         for path in paths
@@ -189,6 +198,12 @@ def array_to_pattern(paths, keys, options):
 
 
 def string_to_pattern(path, keys, options):
+    """
+    Generate pattern for a string.
+
+    Equivalent to `tokens_to_pattern(parse(string))`.
+
+    """
     tokens = parse(path)
     pattern = tokens_to_pattern(tokens, options)
 
@@ -199,6 +214,10 @@ def string_to_pattern(path, keys, options):
 
 
 def tokens_to_pattern(tokens, options=None):
+    """
+    Generate a pattern for the given list of tokens.
+
+    """
     options = options or {}
 
     strict = options.get('strict')
@@ -246,13 +265,18 @@ def tokens_to_pattern(tokens, options=None):
 
 
 def path_to_pattern(path, keys=None, options=None):
+    """
+    Generate a pattern from any kind of path value.
+
+    This function selects the appropriate function array/regex/string paths,
+    and calls it with the provided values.
+
+    """
     keys = keys if keys is not None else []
     options = options if options is not None else {}
 
     if isinstance(path, REGEXP_TYPE):
         return regexp_to_pattern(path, keys)
-
     if isinstance(path, list):
         return array_to_pattern(path, keys, options)
-
     return string_to_pattern(path, keys, options)
