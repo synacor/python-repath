@@ -12,7 +12,15 @@ A port of the node module `path-to-regexp` to Python.
 
 ## Installation
 
-meh
+*repath* is a single module, so installation can be as simple as copying the
+`repath.py` file to your project directory, but you can also cd to your cloned
+repository and:
+
+* `python setup.py install`, or
+* `pip install ./`
+
+*repath* is not currently available on pypi.
+
 
 ## Usage
 
