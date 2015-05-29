@@ -37,8 +37,8 @@ if match:
 
 - **path** A string in the express format, an array of strings, or a regular expression.
 - **options**
-  - **strict** When `False` the trailing slash is optional. (default: `False`)
-  - **end** When `False` the path will match at the beginning. (default: `True`)
+    - **strict** When `False` the trailing slash is optional. (default: `False`)
+    - **end** When `False` the path will match at the beginning. (default: `True`)
 
 ```python
 >>> path_to_pattern('/foo/:bar')
