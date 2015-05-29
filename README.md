@@ -37,7 +37,6 @@ if match:
 
 - **path** A string in the express format, an array of strings, or a regular expression.
 - **options**
-  - **sensitive** When `True` the route will be case sensitive. (default: `False`)
   - **strict** When `False` the trailing slash is optional. (default: `False`)
   - **end** When `False` the path will match at the beginning. (default: `True`)
 
